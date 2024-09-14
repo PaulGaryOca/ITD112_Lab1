@@ -1,25 +1,37 @@
 import React from 'react';
 
+const containerStyles = {
+  padding: '20px',
+  backgroundColor: '#e9ecef', 
+  borderRadius: '8px',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  textAlign: 'center',
+maxWidth:'1200px',
+  margin: '20px auto', 
+  position:'absolute',
+  marginTop:'200px',
+  marginLeft:'325px',
+};
+
+const headingStyles = {
+  color: '#00215E', 
+  fontSize: '24px',
+  fontWeight: 'bold',
+};
+
+const paragraphStyles = {
+  color: '#333', 
+  fontSize: '16px',
+  lineHeight: '1.6',
+};
+
 const DengueHome = () => {
   return (
-    <div>
-      <h2>Welcome to the Dengue Data Dashboard</h2>
-      <p>Yo, Pi'erre, you wanna come out here?
-In New York I Milly Rock (rock)
-Hide it in my sock (sock)
-Running from the opp (opp)
-And I shoot at opp (opp) uh, uh (what?)
-And I'm on the block (what?) Uh, uh (what? What?)
-And I'm on the block (what?)
-In New York I Milly Rock (hello?)
-Hide it in my sock (what?)
-Hide it in my sock (what?)
-Selling that rerock (what? Woah, what? What? Uh, what? What?)
-In New York I Milly Rock (ooh)
-Hide it in my sock (woah)
-Used to sell rerock (what?)
-Runnin' from the cops (woah)
-Shootin' at these opps (woah)</p>
+    <div style={containerStyles}>
+      <h2 style={headingStyles}>Welcome to the Dengue Data Dashboard</h2>
+      <p style={paragraphStyles}>
+      Welcome to the Dengue Data DashboardWelcome to the Dengue Data DashboardWelcome to the Dengue Data DashboardWelcome to the Dengue Data DashboardWelcome to the Dengue Data DashboardWelcome to the Dengue Data DashboardWelcome to the Dengue Data DashboardWelcome to the Dengue Data DashboardWelcome to the Dengue Data DashboardWelcome to the Dengue Data Dashboard
+      </p>
     </div>
   );
 };

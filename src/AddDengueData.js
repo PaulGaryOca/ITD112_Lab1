@@ -2,6 +2,51 @@ import React, { useState } from 'react';
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
+const containerStyles = {
+  backgroundColor: '#ffffff', 
+  padding: '20px', 
+  borderRadius: '8px',
+  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', 
+  maxWidth: '600px',
+  margin: '200px auto 20px auto',
+};
+
+const formStyles = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '10px', 
+};
+
+const inputStyles = {
+  padding: '10px',
+  border: '1px solid #ddd',
+  borderRadius: '5px',
+  fontSize: '16px',
+};
+
+const buttonStyles = {
+  padding: '10px 20px',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  transition: 'background-color 0.3s, color 0.3s',
+  marginTop: '10px', 
+};
+
+const submitButtonStyles = {
+  ...buttonStyles,
+  backgroundColor: '#00215E', 
+    color: '#fff', 
+};
+
+const uploadButtonStyles = {
+  ...buttonStyles,
+  backgroundColor: '#28a745', 
+  color: '#fff', 
+};
+
 const AddDengueData = () => {
   const [formData, setFormData] = useState({
     location: "",
@@ -47,7 +92,7 @@ const AddDengueData = () => {
     const reader = new FileReader();
     reader.onload = async (e) => {
       const text = e.target.result;
-      const rows = text.split('\n').slice(1); // Remove header row
+      const rows = text.split('\n').slice(1); 
       const batchData = [];
 
       rows.forEach((row) => {
@@ -81,16 +126,17 @@ const AddDengueData = () => {
   };
 
   return (
-    <div>
+    <div style={containerStyles}>
       <h2>Add New Dengue Data</h2>
-      {/* Manual data entry form */}
-      <form onSubmit={handleSubmit}>
+      {}
+      <form onSubmit={handleSubmit} style={formStyles}>
         <input
           type="text"
           placeholder="Location"
           value={formData.location}
           onChange={(e) => setFormData({ ...formData, location: e.target.value })}
           required
+          style={inputStyles}
         />
         <input
           type="number"
@@ -98,6 +144,7 @@ const AddDengueData = () => {
           value={formData.cases}
           onChange={(e) => setFormData({ ...formData, cases: e.target.value })}
           required
+          style={inputStyles}
         />
         <input
           type="number"
@@ -105,6 +152,7 @@ const AddDengueData = () => {
           value={formData.deaths}
           onChange={(e) => setFormData({ ...formData, deaths: e.target.value })}
           required
+          style={inputStyles}
         />
         <input
           type="date"
@@ -112,6 +160,7 @@ const AddDengueData = () => {
           value={formData.date}
           onChange={(e) => setFormData({ ...formData, date: e.target.value })}
           required
+          style={inputStyles}
         />
         <input
           type="text"
@@ -119,16 +168,19 @@ const AddDengueData = () => {
           value={formData.regions}
           onChange={(e) => setFormData({ ...formData, regions: e.target.value })}
           required
+          style={inputStyles}
         />
-        <button type="submit">Add Data</button>
+        <button type="submit" style={submitButtonStyles}>
+          Add Data
+        </button>
       </form>
 
       <h3>OR</h3>
 
-      {/* CSV upload section */}
+      {}
       <div>
         <input type="file" accept=".csv" onChange={handleFileChange} />
-        <button onClick={handleFileUpload} disabled={loading}>
+        <button onClick={handleFileUpload} disabled={loading} style={uploadButtonStyles}>
           {loading ? 'Uploading...' : 'Upload CSV'}
         </button>
       </div>

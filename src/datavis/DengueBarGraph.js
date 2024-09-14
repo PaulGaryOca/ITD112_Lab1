@@ -3,12 +3,14 @@ import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
-import '../DengueAnalytics.css'; 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const DengueBarGraph = () => {
   const [regionData, setRegionData] = useState({ labels: [], datasets: [] });
+  const [filteredData, setFilteredData] = useState({ labels: [], datasets: [] });
+  const [regions, setRegions] = useState([]);
+  const [selectedRegion, setSelectedRegion] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,7 +18,6 @@ const DengueBarGraph = () => {
       const dengueSnapshot = await getDocs(dengueCollection);
       const dataList = dengueSnapshot.docs.map(doc => doc.data());
 
-     
       const regionCounts = dataList.reduce((acc, data) => {
         if (!acc[data.regions]) {
           acc[data.regions] = { cases: 0, deaths: 0 };
@@ -26,12 +27,34 @@ const DengueBarGraph = () => {
         return acc;
       }, {});
 
-     
       const sortedRegions = Object.keys(regionCounts).sort();
+      setRegions(sortedRegions);
+
       const sortedCasesData = sortedRegions.map(region => regionCounts[region].cases);
       const sortedDeathsData = sortedRegions.map(region => regionCounts[region].deaths);
 
       setRegionData({
+        labels: sortedRegions,
+        datasets: [
+          {
+            label: 'Cases',
+            data: sortedCasesData,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          },
+          {
+            label: 'Deaths',
+            data: sortedDeathsData,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+          },
+        ],
+      });
+
+   
+      setFilteredData({
         labels: sortedRegions,
         datasets: [
           {
@@ -55,42 +78,131 @@ const DengueBarGraph = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (selectedRegion) {
+      const index = regions.indexOf(selectedRegion);
+      const cases = regionData.datasets[0].data[index];
+      const deaths = regionData.datasets[1].data[index];
+
+      setFilteredData({
+        labels: ['Cases', 'Deaths'],
+        datasets: [
+          {
+            label: selectedRegion,
+            data: [cases, deaths],
+            backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+            borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+            borderWidth: 1,
+          },
+        ],
+      });
+    } else {
+      setFilteredData({
+        labels: regionData.labels,
+        datasets: regionData.datasets,
+      });
+    }
+  }, [selectedRegion, regionData, regions]);
+
+  const handleRegionChange = (event) => {
+    setSelectedRegion(event.target.value);
+  };
+
+  const chartContainerStyles = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    margin: '100px auto',
+    width: '100%',
+    maxWidth: '1200px',
+    position: 'relative', 
+  };
+
+  const dropdownStyles = {
+    position: 'absolute',
+    top: '10px', 
+    right: '10px',
+    zIndex: 1,
+    
+    backgroundColor: 'white',
+    border: '1px solid #ddd',
+    borderRadius: '5px',
+ 
+    fontSize: '16px',
+  };
+
+  const dropdownSelectStyles = {
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+   
+    backgroundColor: '#fff',
+    fontSize: '16px',
+    cursor: 'pointer',
+    outline: 'none',
+    width: '200px',
+  };
+
   return (
-    <div className="chart-container">
-      <h3>Cases and Deaths by Region</h3>
-      <Bar
-        data={regionData}
-        options={{
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            tooltip: {
-              callbacks: {
-                label: function (context) {
-                  let label = context.dataset.label || '';
-                  if (label) {
-                    label += ': ';
-                  }
-                  if (context.parsed.y !== null) {
-                    label += context.parsed.y;
-                  }
-                  return label;
+    <div style={chartContainerStyles}>
+      <div style={dropdownStyles}>
+        <select
+          value={selectedRegion}
+          onChange={handleRegionChange}
+          style={dropdownSelectStyles}
+        >
+          <option value="">Select a region</option>
+          {regions.map((region) => (
+            <option key={region} value={region}>
+              {region}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div style={{ width: '1000px', height: '1000px' }}>
+        <Bar
+          data={filteredData}
+          options={{
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    let label = context.dataset.label || '';
+                    if (label) {
+                      label += ': ';
+                    }
+                    if (context.parsed.y !== null) {
+                      label += context.parsed.y;
+                    }
+                    return label;
+                  },
                 },
               },
             },
-          },
-          scales: {
-            x: {
-              stacked: true,
+            scales: {
+              x: {
+                stacked: true,
+                ticks: {
+                  font: {
+                    size: 25,
+                  },
+                },
+              },
+              y: {
+                stacked: true,
+                ticks: {
+                  font: {
+                    size: 25,
+                  },
+                },
+              },
             },
-            y: {
-              stacked: true,
-            },
-          },
-        }}
-      />
+          }}
+        />
+      </div>
     </div>
   );
 };
