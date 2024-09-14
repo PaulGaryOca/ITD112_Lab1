@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { collection, getDocs, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
+// View all data, delete, update, and sort/filter functionality
 const DengueDataList = () => {
   const [dengueData, setDengueData] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -12,7 +13,11 @@ const DengueDataList = () => {
     date: "",
     regions: "",
   });
+  
+  const [sortField, setSortField] = useState(null);
+  const [sortOrder, setSortOrder] = useState("asc");
 
+  // Fetch data from Firestore
   useEffect(() => {
     const fetchData = async () => {
       const dengueCollection = collection(db, "dengueData");
@@ -27,6 +32,7 @@ const DengueDataList = () => {
     fetchData();
   }, []);
 
+  // Handle deleting a record
   const handleDelete = async (id) => {
     const dengueDocRef = doc(db, "dengueData", id);
     try {
@@ -38,6 +44,7 @@ const DengueDataList = () => {
     }
   };
 
+  // Handle editing a record
   const handleEdit = (data) => {
     setEditingId(data.id);
     setEditForm({
@@ -49,6 +56,7 @@ const DengueDataList = () => {
     });
   };
 
+  // Handle updating a record
   const handleUpdate = async (e) => {
     e.preventDefault();
     const dengueDocRef = doc(db, "dengueData", editingId);
@@ -60,14 +68,31 @@ const DengueDataList = () => {
         date: editForm.date,
         regions: editForm.regions,
       });
-      setDengueData(dengueData.map((data) =>
-        data.id === editingId ? { id: editingId, ...editForm } : data
-      ));
+      setDengueData(
+        dengueData.map((data) =>
+          data.id === editingId ? { id: editingId, ...editForm } : data
+        )
+      );
       setEditingId(null);
       alert("Data updated successfully!");
     } catch (error) {
       console.error("Error updating document: ", error);
     }
+  };
+
+  // Sorting function
+  const handleSort = (field) => {
+    const order = sortField === field && sortOrder === "asc" ? "desc" : "asc";
+    setSortField(field);
+    setSortOrder(order);
+
+    const sortedData = [...dengueData].sort((a, b) => {
+      if (a[field] < b[field]) return order === "asc" ? -1 : 1;
+      if (a[field] > b[field]) return order === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    setDengueData(sortedData);
   };
 
   return (
@@ -114,15 +139,43 @@ const DengueDataList = () => {
           <button onClick={() => setEditingId(null)}>Cancel</button>
         </form>
       ) : (
-        <ul>
-          {dengueData.map((data) => (
-            <li key={data.id}>
-              {data.location} - {data.cases} cases - {data.deaths} deaths - {data.date} - {data.regions}
-              <button onClick={() => handleEdit(data)}>Edit</button>
-              <button onClick={() => handleDelete(data.id)}>Delete</button>
-            </li>
-          ))}
-        </ul>
+        <>
+          <table>
+            <thead>
+              <tr>
+                <th onClick={() => handleSort("location")}>
+                  Location {sortField === "location" && (sortOrder === "asc" ? "↑" : "↓")}
+                </th>
+                <th onClick={() => handleSort("cases")}>
+                  Cases {sortField === "cases" && (sortOrder === "asc" ? "↑" : "↓")}
+                </th>
+                <th onClick={() => handleSort("deaths")}>
+                  Deaths {sortField === "deaths" && (sortOrder === "asc" ? "↑" : "↓")}
+                </th>
+                <th onClick={() => handleSort("date")}>
+                  Date {sortField === "date" && (sortOrder === "asc" ? "↑" : "↓")}
+                </th>
+                <th>Regions</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dengueData.map((data) => (
+                <tr key={data.id}>
+                  <td>{data.location}</td>
+                  <td>{data.cases}</td>
+                  <td>{data.deaths}</td>
+                  <td>{data.date}</td>
+                  <td>{data.regions}</td>
+                  <td>
+                    <button onClick={() => handleEdit(data)}>Edit</button>
+                    <button onClick={() => handleDelete(data.id)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
       )}
     </div>
   );

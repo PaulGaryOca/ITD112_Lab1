@@ -1,0 +1,40 @@
+.charts-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+  }
+  
+  .chart-container {
+    flex: 1;
+    min-width: 300px;
+    margin: 10px;
+  }
+  
+  .chart-container canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+  .chart-container {
+  position: relative;
+  width: 80%;
+  max-width: 800px;
+  margin: auto;
+}
+
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 20px;
+}
+.chart-container {
+  position: relative;
+  width: 80%;
+  max-width: 800px;
+  margin: auto;
+}
+
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 20px;
+}
