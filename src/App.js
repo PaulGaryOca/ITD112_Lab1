@@ -20,8 +20,8 @@ const App = () => {
       <Nav setActiveTab={setActiveTab} />
 
       {activeTab === "home" && <DengueHome />}
-      {activeTab === "addData" && <AddData />}
-      {activeTab === "viewDengue" && <DengueDataList />}
+      {activeTab === "addRecord" && <AddData />}
+      {activeTab === "viewRecords" && <DengueDataList />}
       {activeTab === "viewAnalytics" && <DengueAnalytics />}
     </div>
   );

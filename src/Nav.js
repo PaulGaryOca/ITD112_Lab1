@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-
 const buttonStyles = {
   padding: '10px 20px',
   border: 'none',
@@ -9,27 +8,49 @@ const buttonStyles = {
   fontSize: '16px',
   fontWeight: 'bold',
   transition: 'background-color 0.3s, color 0.3s',
-  margin: '0 100px',
+  margin: '0 10px', 
+  //width:'300px',
 };
 
 const navStyles = {
   position: 'fixed',
-  top: '0px',
-  left: '0', 
+  marginTop: '-20px',
+  
+  marginLeft:'-20px',
   width: '100%', 
-  display: 'flex',
-  justifyContent: 'center', 
-  paddingBottom:'50px',
-  paddingTop:'100px',
-  backgroundColor: '#f8f9fa', 
-  zIndex: '100', 
- };
+  
+  alignItems: 'center', 
+  paddingBottom: '50px',
+  paddingTop: '10px', 
+  backgroundColor: '#ffff', 
+  zIndex: '100',
+};
+
+const logoStyles = {
+  width: '100px', 
+  height: 'auto',
+  marginLeft:'350px',
+  marginRight:'200px',  
+  marginBottom:'-40px',
+ marginTop:'-200px',
+};
+
 const Nav = ({ setActiveTab }) => {
   const [hoveredButton, setHoveredButton] = useState(null);
 
   return (
+    
     <nav style={navStyles}>
-      {['home', 'addData', 'viewDengue', 'viewAnalytics'].map((tab, index) => (
+        <h1 style={{marginLeft:'450px', marginBottom: '-30px', marginTop:'50px',marginRight:'20px', color: '#black' , zIndex: '1',}}>
+       HEALTHCARE 
+        </h1> 
+      <img
+        src="https://png.pngtree.com/template/20190422/ourmid/pngtree-cross-plus-medical-logo-icon-design-template-image_145195.jpg" 
+        alt="Logo"
+        style={logoStyles}
+      />
+    {}
+      {['home', 'addRecord', 'viewRecords', 'viewAnalytics'].map((tab, index) => (
         <button
           key={index}
           style={{

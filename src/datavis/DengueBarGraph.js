@@ -114,21 +114,17 @@ const DengueBarGraph = () => {
     alignItems: 'center',
     margin: '100px auto',
     width: '100%',
-    maxWidth: '1200px',
+    maxWidth: '1800px',
     position: 'relative', 
   };
 
   const dropdownStyles = {
     position: 'absolute',
-    top: '10px', 
-    right: '10px',
+    top: '25px', 
+    right: '30px',
     zIndex: 1,
     
-    backgroundColor: 'white',
-    border: '1px solid #ddd',
-    borderRadius: '5px',
- 
-    fontSize: '16px',
+    fontSize: '25px',
   };
 
   const dropdownSelectStyles = {
@@ -158,7 +154,10 @@ const DengueBarGraph = () => {
           ))}
         </select>
       </div>
-      <div style={{ width: '1000px', height: '1000px' }}>
+      
+      <h3>Dengue Bar Graph (Deaths and Cases)</h3>
+      <div style={{ width: '1100px', height: '1000px' }}>
+        
         <Bar
           data={filteredData}
           options={{
@@ -184,18 +183,28 @@ const DengueBarGraph = () => {
             },
             scales: {
               x: {
+                
                 stacked: true,
+                title: {
+                  display: true,
+                  text: 'Regions',
+                  font: {
+                    size: 30,
+                  },
                 ticks: {
                   font: {
-                    size: 25,
-                  },
+                    size: 30,
+                  },},
                 },
               },
-              y: {
+              y: 
+              {
                 stacked: true,
-                ticks: {
+                title: {
+                  display: true,
+                  text: 'Count',
                   font: {
-                    size: 25,
+                    size: 30,
                   },
                 },
               },
